@@ -1,0 +1,35 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Contract
+    network: mainnet
+    source:
+      address: "0x06a5Bf70BfF314177488864Fe03576ff608e6aec"
+      abi: Contract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      entities:
+        - LogMintRAYT
+        - LogMintOpportunityToken
+        - LogWithdrawFromRAYT
+        - LogBurnRAYT
+        - LogDepositToRAYT
+      abis:
+        - name: Contract
+          file: ./abis/Contract.json
+      eventHandlers:
+        - event: LogMintRAYT(indexed bytes32,indexed bytes32,indexed address,uint256)
+          handler: handleLogMintRAYT
+        - event: LogMintOpportunityToken(bytes32,indexed bytes32)
+          handler: handleLogMintOpportunityToken
+        - event: LogWithdrawFromRAYT(indexed bytes32,uint256,uint256)
+          handler: handleLogWithdrawFromRAYT
+        - event: LogBurnRAYT(indexed bytes32,indexed address,uint256,uint256)
+          handler: handleLogBurnRAYT
+        - event: LogDepositToRAYT(indexed bytes32,uint256,uint256)
+          handler: handleLogDepositToRAYT
+      file: ./src/mapping.ts
