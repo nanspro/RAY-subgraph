@@ -2,12 +2,11 @@ import { BigInt } from "@graphprotocol/graph-ts"
 import {
   PortfolioManager,
   LogMintRAYT,
-  // LogMintOpportunityToken,
-  // LogWithdrawFromRAYT,
-  // LogBurnRAYT,
+  LogMintOpportunityToken,
+  LogWithdrawFromRAYT,
   LogDepositToRAYT
 } from "../generated/PortfolioManager/PortfolioManager"
-import { RayMint, RayDeposit } from "../generated/schema"
+import { RayMint, RayDeposit, RayWithdraw, OpportunityMint } from "../generated/schema"
 
 export function handleLogMintRAYT(event: LogMintRAYT): void {
   // Entities can be loaded from the store using a string ID; this ID
@@ -27,7 +26,7 @@ export function handleLogMintRAYT(event: LogMintRAYT): void {
   entity.value = event.params.value;
 
   // Entity fields can be set based on event parameters
-  entity.tokenId = event.params.tokenId
+  entity.rayTokenId = event.params.tokenId
   entity.portfolioId = event.params.portfolioId
   entity.owner = event.params.beneficiary.toHexString()
 
@@ -55,21 +54,35 @@ export function handleLogMintRAYT(event: LogMintRAYT): void {
   // - contract.onERC721Received(...)
 }
 
-// export function handleLogMintOpportunityToken(
-//   event: LogMintOpportunityToken
-// ): void {}
-
-// export function handleLogWithdrawFromRAYT(event: LogWithdrawFromRAYT): void {}
-
-// export function handleLogBurnRAYT(event: LogBurnRAYT): void {}
-
 export function handleLogDepositToRAYT(event: LogDepositToRAYT): void {
   let entity = new RayDeposit(event.transaction.hash.toHex())
 
   entity.value = event.params.value;
 
-  entity.tokenId = event.params.tokenId
-  entity.tokenValue = event.params.tokenValue
+  entity.rayTokenId = event.params.tokenId
+  entity.previousValue = event.params.tokenValue
 
+  entity.save()
+}
+
+export function handleLogWithdrawFromRAYT(event: LogWithdrawFromRAYT): void {
+  let entity = new RayWithdraw(event.transaction.hash.toHex())
+
+  entity.totalValue = event.params.tokenValue;
+
+  entity.rayTokenId = event.params.tokenId
+  entity.valueAfterFee = event.params.value
+
+  entity.save()
+}
+
+export function handleLogMintOpportunityToken(
+  event: LogMintOpportunityToken
+): void {
+  let entity = new OpportunityMint(event.transaction.hash.toHex())
+
+  entity.opportunityTokenId = event.params.tokenId;
+
+  entity.portfolioId = event.params.portfolioId
   entity.save()
 }

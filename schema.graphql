@@ -1,14 +1,30 @@
+# Portfolio Manager Entities
 type RayMint @entity {
   id: ID!
   value: BigInt!
-  tokenId: Bytes! # bytes32
-  portfolioId: Bytes! # bytes32
+  rayTokenId: Bytes! # unique Id of the position, id of the ray token
+  portfolioId: Bytes!
   owner: String!
 }
 
 type RayDeposit @entity {
   id: ID!
   value: BigInt!
-  tokenValue: BigInt!
-  tokenId: Bytes! # bytes32
+  previousValue: BigInt!
+  rayTokenId: Bytes!
 }
+
+type RayWithdraw @entity {
+  id: ID!
+  valueAfterFee: BigInt! # value withdrawn, fees included
+  rayTokenId: Bytes!
+  totalValue: BigInt! # Total value of the position before withdrawl
+}
+
+type OpportunityMint @entity {
+  id: ID!
+  opportunityTokenId: Bytes! # generated when portfolio lends to a opportunityId
+  portfolioId: Bytes!
+}
+
+#
