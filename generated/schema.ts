@@ -12,7 +12,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class ExampleEntity extends Entity {
+export class RayMint extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -20,17 +20,17 @@ export class ExampleEntity extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id !== null, "Cannot save ExampleEntity entity without an ID");
+    assert(id !== null, "Cannot save RayMint entity without an ID");
     assert(
       id.kind == ValueKind.STRING,
-      "Cannot save ExampleEntity entity with non-string ID. " +
+      "Cannot save RayMint entity with non-string ID. " +
         'Considering using .toHex() to convert the "id" to a string.'
     );
-    store.set("ExampleEntity", id.toString(), this);
+    store.set("RayMint", id.toString(), this);
   }
 
-  static load(id: string): ExampleEntity | null {
-    return store.get("ExampleEntity", id) as ExampleEntity | null;
+  static load(id: string): RayMint | null {
+    return store.get("RayMint", id) as RayMint | null;
   }
 
   get id(): string {
@@ -42,13 +42,13 @@ export class ExampleEntity extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get count(): BigInt {
-    let value = this.get("count");
+  get value(): BigInt {
+    let value = this.get("value");
     return value.toBigInt();
   }
 
-  set count(value: BigInt) {
-    this.set("count", Value.fromBigInt(value));
+  set value(value: BigInt) {
+    this.set("value", Value.fromBigInt(value));
   }
 
   get tokenId(): Bytes {
@@ -67,5 +67,72 @@ export class ExampleEntity extends Entity {
 
   set portfolioId(value: Bytes) {
     this.set("portfolioId", Value.fromBytes(value));
+  }
+
+  get owner(): string {
+    let value = this.get("owner");
+    return value.toString();
+  }
+
+  set owner(value: string) {
+    this.set("owner", Value.fromString(value));
+  }
+}
+
+export class RayDeposit extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save RayDeposit entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save RayDeposit entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("RayDeposit", id.toString(), this);
+  }
+
+  static load(id: string): RayDeposit | null {
+    return store.get("RayDeposit", id) as RayDeposit | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get value(): BigInt {
+    let value = this.get("value");
+    return value.toBigInt();
+  }
+
+  set value(value: BigInt) {
+    this.set("value", Value.fromBigInt(value));
+  }
+
+  get tokenValue(): BigInt {
+    let value = this.get("tokenValue");
+    return value.toBigInt();
+  }
+
+  set tokenValue(value: BigInt) {
+    this.set("tokenValue", Value.fromBigInt(value));
+  }
+
+  get tokenId(): Bytes {
+    let value = this.get("tokenId");
+    return value.toBytes();
+  }
+
+  set tokenId(value: Bytes) {
+    this.set("tokenId", Value.fromBytes(value));
   }
 }

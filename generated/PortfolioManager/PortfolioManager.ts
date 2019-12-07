@@ -149,9 +149,9 @@ export class LogDepositToRAYT__Params {
   }
 }
 
-export class Contract extends SmartContract {
-  static bind(address: Address): Contract {
-    return new Contract("Contract", address);
+export class PortfolioManager extends SmartContract {
+  static bind(address: Address): PortfolioManager {
+    return new PortfolioManager("PortfolioManager", address);
   }
 
   deprecated(): boolean {

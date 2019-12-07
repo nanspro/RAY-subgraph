@@ -1,6 +1,14 @@
-type ExampleEntity @entity {
+type RayMint @entity {
   id: ID!
-  count: BigInt!
+  value: BigInt!
   tokenId: Bytes! # bytes32
   portfolioId: Bytes! # bytes32
+  owner: String!
+}
+
+type RayDeposit @entity {
+  id: ID!
+  value: BigInt!
+  tokenValue: BigInt!
+  tokenId: Bytes! # bytes32
 }

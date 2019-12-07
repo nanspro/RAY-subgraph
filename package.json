@@ -1,13 +1,13 @@
 {
-  "name": "RAY-subgraph",
-  "license": "UNLICENSED",
+  "name": "RAY",
+  "license": "MIT",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ nanspro/RAY-subgraph",
-    "create-local": "graph create --node http://localhost:8020/ nanspro/RAY-subgraph",
-    "remove-local": "graph remove --node http://localhost:8020/ nanspro/RAY-subgraph",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 nanspro/RAY-subgraph"
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ nanspro/RAY",
+    "create-local": "graph create --node http://localhost:8020/ nanspro/RAY",
+    "remove-local": "graph remove --node http://localhost:8020/ nanspro/RAY",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 nanspro/RAY"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.15.0",
