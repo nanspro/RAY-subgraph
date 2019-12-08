@@ -3,7 +3,7 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: PortfolioManager
+    name: Contract
     network: mainnet
     source:
       address: "0x06a5Bf70BfF314177488864Fe03576ff608e6aec"
@@ -21,6 +21,8 @@ dataSources:
       abis:
         - name: PortfolioManager
           file: ./abis/PortfolioManager.json
+        - name: NAVCalculator
+          file: ./abis/NAVCalculator.json
       eventHandlers:
         - event: LogMintRAYT(indexed bytes32,indexed bytes32,indexed address,uint256)
           handler: handleLogMintRAYT
@@ -33,33 +35,3 @@ dataSources:
         - event: LogBurnRAYT(indexed bytes32,indexed address,uint256,uint256)
           handler: handleLogBurnRAYT
       file: ./src/mapping.ts
-  
-  # - kind: ethereum/contract
-  #   name: NAVCalculator
-  #   network: mainnet
-  #   source:
-  #     address: "0xD23fA5F1a001eCDed63b45Da426972fB2AAD2760"
-  #     abi: NAVCalculator
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.3
-  #     language: wasm/assemblyscript
-  #     abis:
-  #       - name: NAVCalculator
-  #         file: ./abis/NAVCalculator.json
-  #     file: ./src/mapping.ts
-
-  # - kind: ethereum/contract
-  #   name: RAYToken
-  #   network: mainnet
-  #   source:
-  #     address: "0xE215e8160a5e0A03f2D6c7900b050F2f04eA5Cbb"
-  #     abi: RAYToken
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.3
-  #     language: wasm/assemblyscript
-  #     abis:
-  #       - name: RAYToken
-  #         file: ./abis/RAYToken.json
-  #     file: ./src/mapping.ts

@@ -1,4 +1,4 @@
-import { BigInt } from "@graphprotocol/graph-ts"
+import { BigInt, Address, log } from "@graphprotocol/graph-ts"
 import {
   PortfolioManager,
   LogMintRAYT,
@@ -6,13 +6,19 @@ import {
   LogWithdrawFromRAYT,
   LogDepositToRAYT,
   LogBurnRAYT
-} from "../generated/PortfolioManager/PortfolioManager"
+} from "../generated/Contract/PortfolioManager"
+import { NAVCalculator } from "../generated/Contract/NAVCalculator"
 import { RayMint, RayDeposit, RayWithdraw, OpportunityMint, RayBurn } from "../generated/schema"
 
 export function handleLogMintRAYT(event: LogMintRAYT): void {
   // Entities can be loaded from the store using a string ID; this ID
   // needs to be unique across all entities of the same type
+  // let navContract = NAVCalculator.bind(Address.fromString("0xD23fA5F1a001eCDed63b45Da426972fB2AAD2760"))
   let entity = new RayMint(event.transaction.hash.toHex())
+
+  // let naValue = navContract.getPortfolioPricePerShare(event.params.portfolioId)
+  // log.debug("Portfolio Price per share is {}", [naValue.toHexString()])
+
 
   // Entities only exist after they have been saved to the store;
   // `null` checks allow to create entities on demand
@@ -94,10 +100,12 @@ export function handleLogBurnRAYT(
 export function handleLogMintOpportunityToken(
   event: LogMintOpportunityToken
 ): void {
+  // let navContract = NAVCalculator.bind(Address.fromString("0xD23fA5F1a001eCDed63b45Da426972fB2AAD2760"))
   let entity = new OpportunityMint(event.transaction.hash.toHex())
 
-  entity.opportunityTokenId = event.params.tokenId;
-
+  // let valueOpportunity = navContract.getOpportunityBalance(event.params.portfolioId, event.params.tokenId)
+  entity.opportunityTokenId = event.params.tokenId
+  // log.debug("Opportunity Balance is {}", [valueOpportunity.toHexString()])
   entity.portfolioId = event.params.portfolioId
   entity.save()
 }
