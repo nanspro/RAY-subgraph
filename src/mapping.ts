@@ -4,9 +4,10 @@ import {
   LogMintRAYT,
   LogMintOpportunityToken,
   LogWithdrawFromRAYT,
-  LogDepositToRAYT
+  LogDepositToRAYT,
+  LogBurnRAYT
 } from "../generated/PortfolioManager/PortfolioManager"
-import { RayMint, RayDeposit, RayWithdraw, OpportunityMint } from "../generated/schema"
+import { RayMint, RayDeposit, RayWithdraw, OpportunityMint, RayBurn } from "../generated/schema"
 
 export function handleLogMintRAYT(event: LogMintRAYT): void {
   // Entities can be loaded from the store using a string ID; this ID
@@ -73,6 +74,20 @@ export function handleLogWithdrawFromRAYT(event: LogWithdrawFromRAYT): void {
   entity.rayTokenId = event.params.tokenId
   entity.valueAfterFee = event.params.value
 
+  entity.save()
+}
+
+export function handleLogBurnRAYT(
+  event: LogBurnRAYT
+): void {
+  let entity = new RayBurn(event.transaction.hash.toHex())
+
+  entity.rayTokenId = event.params.tokenId;
+
+  entity.value = event.params.value;
+  entity.worth = event.params.tokenValue;
+
+  entity.owner = event.params.beneficiary.toHexString()
   entity.save()
 }
 

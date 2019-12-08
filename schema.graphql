@@ -1,7 +1,7 @@
 # Portfolio Manager Entities
 type RayMint @entity {
   id: ID!
-  value: BigInt!
+  value: BigInt! # in wei
   rayTokenId: Bytes! # unique Id of the position, id of the ray token
   portfolioId: Bytes!
   owner: String!
@@ -18,7 +18,15 @@ type RayWithdraw @entity {
   id: ID!
   valueAfterFee: BigInt! # value withdrawn, fees included
   rayTokenId: Bytes!
-  totalValue: BigInt! # Total value of the position before withdrawl
+  totalValue: BigInt! # Total value of the position before withdrawal
+}
+
+type RayBurn @entity {
+  id: ID!
+  owner: String! # who will receive the value of this ray token
+  rayTokenId: Bytes!
+  value: BigInt! # amount transferred to owner (worth of token - fees)
+  worth: BigInt! # worth of the ray token, value without fees
 }
 
 type OpportunityMint @entity {

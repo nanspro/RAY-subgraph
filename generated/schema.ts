@@ -195,6 +195,73 @@ export class RayWithdraw extends Entity {
   }
 }
 
+export class RayBurn extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save RayBurn entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save RayBurn entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("RayBurn", id.toString(), this);
+  }
+
+  static load(id: string): RayBurn | null {
+    return store.get("RayBurn", id) as RayBurn | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get owner(): string {
+    let value = this.get("owner");
+    return value.toString();
+  }
+
+  set owner(value: string) {
+    this.set("owner", Value.fromString(value));
+  }
+
+  get rayTokenId(): Bytes {
+    let value = this.get("rayTokenId");
+    return value.toBytes();
+  }
+
+  set rayTokenId(value: Bytes) {
+    this.set("rayTokenId", Value.fromBytes(value));
+  }
+
+  get value(): BigInt {
+    let value = this.get("value");
+    return value.toBigInt();
+  }
+
+  set value(value: BigInt) {
+    this.set("value", Value.fromBigInt(value));
+  }
+
+  get worth(): BigInt {
+    let value = this.get("worth");
+    return value.toBigInt();
+  }
+
+  set worth(value: BigInt) {
+    this.set("worth", Value.fromBigInt(value));
+  }
+}
+
 export class OpportunityMint extends Entity {
   constructor(id: string) {
     super();
