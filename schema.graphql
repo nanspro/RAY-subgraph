@@ -2,13 +2,13 @@ type User @entity {
   id: ID! #ray tokenId
   address: String!
   portfolioId: Bytes!
-  assetValue: BigInt!
+  tokenValue: BigInt! # deposited token value
+  tokenAddr: String! # which token is this, eth, dai?
+  isERC20: Boolean
 }
 
 type RayToken @entity {
   id: ID! # tokenId
-  # value: BigInt! # in wei
-  # portfolioId: Bytes!
   owner: User!
 }
 

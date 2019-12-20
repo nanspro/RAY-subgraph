@@ -60,13 +60,31 @@ export class User extends Entity {
     this.set("portfolioId", Value.fromBytes(value));
   }
 
-  get assetValue(): BigInt {
-    let value = this.get("assetValue");
+  get tokenValue(): BigInt {
+    let value = this.get("tokenValue");
     return value.toBigInt();
   }
 
-  set assetValue(value: BigInt) {
-    this.set("assetValue", Value.fromBigInt(value));
+  set tokenValue(value: BigInt) {
+    this.set("tokenValue", Value.fromBigInt(value));
+  }
+
+  get tokenAddr(): string {
+    let value = this.get("tokenAddr");
+    return value.toString();
+  }
+
+  set tokenAddr(value: string) {
+    this.set("tokenAddr", Value.fromString(value));
+  }
+
+  get isERC20(): boolean {
+    let value = this.get("isERC20");
+    return value.toBoolean();
+  }
+
+  set isERC20(value: boolean) {
+    this.set("isERC20", Value.fromBoolean(value));
   }
 }
 

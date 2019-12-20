@@ -11,6 +11,8 @@ import { NAVCalculator } from "../generated/Contract/NAVCalculator"
 import { Storage } from "../generated/Contract/Storage"
 import { User, RayToken, RayMint, RayDeposit, RayWithdraw, Opportunity, RayBurn } from "../generated/schema"
 
+let storage = Storage.bind(Address.fromString("0x446711E5ED3013743e40342A0462FBdc437cd43F"))
+
 export function handleLogMintRAYT(event: LogMintRAYT): void {
   // let navContract = NAVCalculator.bind(Address.fromString("0xD23fA5F1a001eCDed63b45Da426972fB2AAD2760"))
   let entity = new RayMint(event.transaction.hash.toHex())
@@ -40,7 +42,10 @@ export function handleLogMintRAYT(event: LogMintRAYT): void {
 
   entityUser.address = event.params.beneficiary.toHexString()
   entityUser.portfolioId = event.params.portfolioId
-  entityUser.assetValue = event.params.value;
+  entityUser.tokenValue = event.params.value;
+  let tokenAddr = storage.getPrincipalAddress(event.params.portfolioId)
+  entityUser.tokenAddr = tokenAddr.toHex()
+  entityUser.isERC20 = storage.getIsERC20(tokenAddr)
 
   // Entities can be written to the store with `.save()`
   entity.save()
@@ -65,15 +70,18 @@ export function handleLogMintRAYT(event: LogMintRAYT): void {
 export function handleLogDepositToRAYT(event: LogDepositToRAYT): void {
   let entity = new RayDeposit(event.transaction.hash.toHex())
   let entityUser = User.load(event.params.tokenId.toHex())
-  let storage = Storage.bind(Address.fromString("0x446711E5ED3013743e40342A0462FBdc437cd43F"))
+  // let storage = Storage.bind(Address.fromString("0x446711E5ED3013743e40342A0462FBdc437cd43F"))
 
 
   if (entityUser == null) {
-    log.debug("Cannot be loadeddddd {}", [event.params.tokenId.toHex()])
+    log.debug("Unable to load User Entity {}", [event.params.tokenId.toHex()])
     entityUser = new User(event.params.tokenId.toHex())
     entityUser.address = event.transaction.from.toHex()
     let portfolioId = storage.getTokenKey(event.params.tokenId)
     entityUser.portfolioId = portfolioId
+    let tokenAddr = storage.getPrincipalAddress(portfolioId)
+    entityUser.tokenAddr = tokenAddr.toHex()
+    entityUser.isERC20 = storage.getIsERC20(tokenAddr)
     
   }
   entity.value = event.params.value;
@@ -81,7 +89,7 @@ export function handleLogDepositToRAYT(event: LogDepositToRAYT): void {
   entity.rayTokenId = event.params.tokenId
   entity.previousValue = event.params.tokenValue
 
-  entityUser.assetValue = event.params.tokenValue.plus(event.params.value)
+  entityUser.tokenValue = event.params.tokenValue.plus(event.params.value)
   entity.save()
   entityUser.save()
 }
@@ -89,13 +97,17 @@ export function handleLogDepositToRAYT(event: LogDepositToRAYT): void {
 export function handleLogWithdrawFromRAYT(event: LogWithdrawFromRAYT): void {
   let entity = new RayWithdraw(event.transaction.hash.toHex())
   let entityUser = User.load(event.params.tokenId.toHex())
-  let storage = Storage.bind(Address.fromString("0x446711E5ED3013743e40342A0462FBdc437cd43F"))
+  // let storage = Storage.bind(Address.fromString("0x446711E5ED3013743e40342A0462FBdc437cd43F"))
 
   if (entityUser == null) {
     entityUser = new User(event.params.tokenId.toHex())
     entityUser.address = event.transaction.from.toHex()
     let portfolioId = storage.getTokenKey(event.params.tokenId)
     entityUser.portfolioId = portfolioId
+    let tokenAddr = storage.getPrincipalAddress(portfolioId)
+    entityUser.tokenAddr = tokenAddr.toHex()
+    entityUser.isERC20 = storage.getIsERC20(tokenAddr)
+
   }
   
   entity.totalValue = event.params.tokenValue;
@@ -103,10 +115,10 @@ export function handleLogWithdrawFromRAYT(event: LogWithdrawFromRAYT): void {
   entity.rayTokenId = event.params.tokenId
   entity.valueAfterFee = event.params.value
 
-  entityUser.assetValue = event.params.tokenValue.minus(event.params.value)
+  entityUser.tokenValue = event.params.tokenValue.minus(event.params.value)
 
   entity.save()
-  // entityUser.save()
+  entityUser.save()
 }
 
 export function handleLogBurnRAYT(
