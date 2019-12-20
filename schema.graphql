@@ -1,8 +1,27 @@
-# Portfolio Manager Entities
+type User @entity {
+  id: ID! #ray tokenId
+  address: String!
+  portfolioId: Bytes!
+  assetValue: BigInt!
+}
+
+type RayToken @entity {
+  id: ID! # tokenId
+  # value: BigInt! # in wei
+  # portfolioId: Bytes!
+  owner: User!
+}
+
+type Opportunity @entity {
+  id: ID!
+  opportunityTokenId: Bytes! # generated when portfolio lends to a opportunityId
+  portfolioId: Bytes!
+}
+
 type RayMint @entity {
   id: ID!
   value: BigInt! # in wei
-  rayTokenId: Bytes! # unique Id of the position, id of the ray token
+  rayTokenId: Bytes!
   portfolioId: Bytes!
   owner: String!
 }
@@ -27,10 +46,4 @@ type RayBurn @entity {
   rayTokenId: Bytes!
   value: BigInt! # amount transferred to owner (worth of token - fees)
   worth: BigInt! # worth of the ray token, value without fees
-}
-
-type OpportunityMint @entity {
-  id: ID!
-  opportunityTokenId: Bytes! # generated when portfolio lends to a opportunityId
-  portfolioId: Bytes!
 }

@@ -5,16 +5,17 @@ import {
   LogMintOpportunityToken,
   LogWithdrawFromRAYT,
   LogDepositToRAYT,
-  LogBurnRAYT
+  LogBurnRAYT,
 } from "../generated/Contract/PortfolioManager"
 import { NAVCalculator } from "../generated/Contract/NAVCalculator"
-import { RayMint, RayDeposit, RayWithdraw, OpportunityMint, RayBurn } from "../generated/schema"
+import { Storage } from "../generated/Contract/Storage"
+import { User, RayToken, RayMint, RayDeposit, RayWithdraw, Opportunity, RayBurn } from "../generated/schema"
 
 export function handleLogMintRAYT(event: LogMintRAYT): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
   // let navContract = NAVCalculator.bind(Address.fromString("0xD23fA5F1a001eCDed63b45Da426972fB2AAD2760"))
   let entity = new RayMint(event.transaction.hash.toHex())
+  let entityRay = new RayToken(event.params.tokenId.toHex())
+  let entityUser = new User(event.params.tokenId.toHex())
 
   // let naValue = navContract.getPortfolioPricePerShare(event.params.portfolioId)
   // log.debug("Portfolio Price per share is {}", [naValue.toHexString()])
@@ -29,22 +30,22 @@ export function handleLogMintRAYT(event: LogMintRAYT): void {
   //   entity.count = BigInt.fromI32(0)
   // }
 
-  // BigInt and BigDecimal math are supported
-  entity.value = event.params.value;
-
   // Entity fields can be set based on event parameters
+  entity.value = event.params.value;
   entity.rayTokenId = event.params.tokenId
   entity.portfolioId = event.params.portfolioId
   entity.owner = event.params.beneficiary.toHexString()
 
+  entityRay.owner = entityUser.id
+
+  entityUser.address = event.params.beneficiary.toHexString()
+  entityUser.portfolioId = event.params.portfolioId
+  entityUser.assetValue = event.params.value;
+
   // Entities can be written to the store with `.save()`
   entity.save()
-
-  // Note: If a handler doesn't require existing field values, it is faster
-  // _not_ to load the entity from the store. Instead, create it fresh with
-  // `new Entity(...)`, set the fields that should be updated and save the
-  // entity back to the store. Fields that were not set or unset remain
-  // unchanged, allowing for partial updates to be applied.
+  entityRay.save()
+  entityUser.save()
 
   // It is also possible to access smart contracts from mappings. For
   // example, the contract that has emitted the event can be connected to
@@ -63,24 +64,49 @@ export function handleLogMintRAYT(event: LogMintRAYT): void {
 
 export function handleLogDepositToRAYT(event: LogDepositToRAYT): void {
   let entity = new RayDeposit(event.transaction.hash.toHex())
+  let entityUser = User.load(event.params.tokenId.toHex())
+  let storage = Storage.bind(Address.fromString("0x446711E5ED3013743e40342A0462FBdc437cd43F"))
 
+
+  if (entityUser == null) {
+    log.debug("Cannot be loadeddddd {}", [event.params.tokenId.toHex()])
+    entityUser = new User(event.params.tokenId.toHex())
+    entityUser.address = event.transaction.from.toHex()
+    let portfolioId = storage.getTokenKey(event.params.tokenId)
+    entityUser.portfolioId = portfolioId
+    
+  }
   entity.value = event.params.value;
 
   entity.rayTokenId = event.params.tokenId
   entity.previousValue = event.params.tokenValue
 
+  entityUser.assetValue = event.params.tokenValue.plus(event.params.value)
   entity.save()
+  entityUser.save()
 }
 
 export function handleLogWithdrawFromRAYT(event: LogWithdrawFromRAYT): void {
   let entity = new RayWithdraw(event.transaction.hash.toHex())
+  let entityUser = User.load(event.params.tokenId.toHex())
+  let storage = Storage.bind(Address.fromString("0x446711E5ED3013743e40342A0462FBdc437cd43F"))
 
+  if (entityUser == null) {
+    entityUser = new User(event.params.tokenId.toHex())
+    entityUser.address = event.transaction.from.toHex()
+    let portfolioId = storage.getTokenKey(event.params.tokenId)
+    entityUser.portfolioId = portfolioId
+  }
+  
   entity.totalValue = event.params.tokenValue;
 
   entity.rayTokenId = event.params.tokenId
   entity.valueAfterFee = event.params.value
 
+  entityUser.assetValue = event.params.tokenValue.minus(event.params.value)
+
   entity.save()
+  // entityUser.save()
 }
 
 export function handleLogBurnRAYT(
@@ -101,7 +127,7 @@ export function handleLogMintOpportunityToken(
   event: LogMintOpportunityToken
 ): void {
   // let navContract = NAVCalculator.bind(Address.fromString("0xD23fA5F1a001eCDed63b45Da426972fB2AAD2760"))
-  let entity = new OpportunityMint(event.transaction.hash.toHex())
+  let entity = new Opportunity(event.transaction.hash.toHex())
 
   // let valueOpportunity = navContract.getOpportunityBalance(event.params.portfolioId, event.params.tokenId)
   entity.opportunityTokenId = event.params.tokenId

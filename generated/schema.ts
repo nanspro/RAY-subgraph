@@ -12,6 +12,153 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
+export class User extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save User entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save User entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("User", id.toString(), this);
+  }
+
+  static load(id: string): User | null {
+    return store.get("User", id) as User | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get address(): string {
+    let value = this.get("address");
+    return value.toString();
+  }
+
+  set address(value: string) {
+    this.set("address", Value.fromString(value));
+  }
+
+  get portfolioId(): Bytes {
+    let value = this.get("portfolioId");
+    return value.toBytes();
+  }
+
+  set portfolioId(value: Bytes) {
+    this.set("portfolioId", Value.fromBytes(value));
+  }
+
+  get assetValue(): BigInt {
+    let value = this.get("assetValue");
+    return value.toBigInt();
+  }
+
+  set assetValue(value: BigInt) {
+    this.set("assetValue", Value.fromBigInt(value));
+  }
+}
+
+export class RayToken extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save RayToken entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save RayToken entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("RayToken", id.toString(), this);
+  }
+
+  static load(id: string): RayToken | null {
+    return store.get("RayToken", id) as RayToken | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get owner(): string {
+    let value = this.get("owner");
+    return value.toString();
+  }
+
+  set owner(value: string) {
+    this.set("owner", Value.fromString(value));
+  }
+}
+
+export class Opportunity extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save Opportunity entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save Opportunity entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("Opportunity", id.toString(), this);
+  }
+
+  static load(id: string): Opportunity | null {
+    return store.get("Opportunity", id) as Opportunity | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get opportunityTokenId(): Bytes {
+    let value = this.get("opportunityTokenId");
+    return value.toBytes();
+  }
+
+  set opportunityTokenId(value: Bytes) {
+    this.set("opportunityTokenId", Value.fromBytes(value));
+  }
+
+  get portfolioId(): Bytes {
+    let value = this.get("portfolioId");
+    return value.toBytes();
+  }
+
+  set portfolioId(value: Bytes) {
+    this.set("portfolioId", Value.fromBytes(value));
+  }
+}
+
 export class RayMint extends Entity {
   constructor(id: string) {
     super();
@@ -259,54 +406,5 @@ export class RayBurn extends Entity {
 
   set worth(value: BigInt) {
     this.set("worth", Value.fromBigInt(value));
-  }
-}
-
-export class OpportunityMint extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id !== null, "Cannot save OpportunityMint entity without an ID");
-    assert(
-      id.kind == ValueKind.STRING,
-      "Cannot save OpportunityMint entity with non-string ID. " +
-        'Considering using .toHex() to convert the "id" to a string.'
-    );
-    store.set("OpportunityMint", id.toString(), this);
-  }
-
-  static load(id: string): OpportunityMint | null {
-    return store.get("OpportunityMint", id) as OpportunityMint | null;
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get opportunityTokenId(): Bytes {
-    let value = this.get("opportunityTokenId");
-    return value.toBytes();
-  }
-
-  set opportunityTokenId(value: Bytes) {
-    this.set("opportunityTokenId", Value.fromBytes(value));
-  }
-
-  get portfolioId(): Bytes {
-    let value = this.get("portfolioId");
-    return value.toBytes();
-  }
-
-  set portfolioId(value: Bytes) {
-    this.set("portfolioId", Value.fromBytes(value));
   }
 }

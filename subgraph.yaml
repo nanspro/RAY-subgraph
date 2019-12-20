@@ -23,6 +23,8 @@ dataSources:
           file: ./abis/PortfolioManager.json
         - name: NAVCalculator
           file: ./abis/NAVCalculator.json
+        - name: Storage
+          file: ./abis/Storage.json
       eventHandlers:
         - event: LogMintRAYT(indexed bytes32,indexed bytes32,indexed address,uint256)
           handler: handleLogMintRAYT
