@@ -1,4 +1,4 @@
-import { BigInt, Address, log } from "@graphprotocol/graph-ts"
+import { BigInt, Address, log, store } from "@graphprotocol/graph-ts"
 import {
   PortfolioManager,
   LogMintRAYT,
@@ -125,6 +125,11 @@ export function handleLogBurnRAYT(
   event: LogBurnRAYT
 ): void {
   let entity = new RayBurn(event.transaction.hash.toHex())
+
+  store.remove("User", event.params.tokenId.toHex())
+  store.remove("RayToken", event.params.tokenId.toHex())
+
+  log.info("Removing User and RayToken Entity with id {}", [event.params.tokenId.toHex()])
 
   entity.rayTokenId = event.params.tokenId;
 
