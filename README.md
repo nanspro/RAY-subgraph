@@ -4,7 +4,7 @@ Robo-Advisor for Yield (RAY) is a decentralized investment tool that re-balances
 Users deposit funds into the RAY smart contract, customize which Opportunities should be considered, and an off-chain oracle monitors rates on eligible protocols. RAY automatically moves funds to the highest-yielding at option at any time. Users receive an ERC-721 token representing the value of positions they own.
 
 This subgraph tracks all opportunities, users and RAY tokens and all the activities of users such as minting, depositing, withdrawing. and burning to Ray Contract.
-Subgraph is deployed here https://thegraph.com/explorer/subgraph/nanspro/ray, you can run queries there and also use the apis in your dapp. There is one demo dapp which can be found here.
+Subgraph is deployed here https://thegraph.com/explorer/subgraph/nanspro/ray, you can run queries there and also use the apis in your dapp. There is one demo dapp which can be found here: http://nanspro.github.io/
 
 ## Installation
 ```
